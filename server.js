@@ -22,10 +22,10 @@ app.use(cors());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
+app.use("/api", uploadRouter); // Add the upload route
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/products", productsRouter);
-app.use("/api", uploadRouter); // Add the upload route
 
 dbConnection();
 app.listen(config.port, () => {
