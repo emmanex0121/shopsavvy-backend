@@ -3,15 +3,23 @@ import multer from "multer";
 import axios from "axios";
 import path from "path"; // Import path module
 import { apiResponseCode } from "./helper.js";
+import fs from "fs";
+import path from "path";
 
 const uploadRouter = express.Router();
 
 // Define the storage engine
 // const storage = multer.memoryStorage(); // Or use diskStorage as needed
 // Alternatively, use diskStorage if you want to save files to disk
+// Check if the folder exists, and create it if it doesn'
+
+if (!fs.existsSync(path)) {
+  fs.mkdirSync(path, { recursive: true });
+}
+
 let storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/"); // Directory where files will be saved
+    cb(null, "../uploads"); // Directory where files will be saved
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname)); // Filename
