@@ -4,7 +4,6 @@ import axios from "axios";
 import path from "path"; // Import path module
 import { apiResponseCode } from "./helper.js";
 import fs from "fs";
-import path from "path";
 
 const uploadRouter = express.Router();
 
@@ -13,8 +12,8 @@ const uploadRouter = express.Router();
 // Alternatively, use diskStorage if you want to save files to disk
 // Check if the folder exists, and create it if it doesn'
 
-if (!fs.existsSync(path)) {
-  fs.mkdirSync(path, { recursive: true });
+if (!fs.existsSync("../uploads")) {
+  fs.mkdirSync("../uploads", { recursive: true });
 }
 
 let storage = multer.diskStorage({
