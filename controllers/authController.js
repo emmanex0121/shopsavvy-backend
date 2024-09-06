@@ -55,6 +55,13 @@ const registration = async (req, res) => {
     // save user to database
     await user.save();
 
+    // create/sign token to access protected routes and terminate toke in specified time
+    const token = await jwt.sign(
+      { id: user._id, email: user.email },
+      config.jwtSecret,
+      { expiresIn: "1h" }
+    );
+
     res.status(201).json({
       response: apiResponseCode.SUCCESSFUL,
       responseMessage: `${email} registered succefully`,
@@ -63,6 +70,7 @@ const registration = async (req, res) => {
         email,
         lastName,
         userName,
+        token
       },
     });
 
@@ -129,7 +137,7 @@ const login = async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    // response if everything goes well and token generated
+    // response if everything goes well and token generated.
     res.status(200).json({
       response: apiResponseCode.SUCCESSFUL,
       responseMessage: `${email} login succefully`,
