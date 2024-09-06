@@ -3,30 +3,42 @@ import multer from "multer";
 import axios from "axios";
 import path from "path"; // Import path module
 import { apiResponseCode } from "./helper.js";
-import fs from "fs";
-import { fileURLToPath } from "url";
+import fs from "fs"; // Import the fs module
 
 const uploadRouter = express.Router();
 
 // Define the storage engine
 // const storage = multer.memoryStorage(); // Or use diskStorage as needed
 // Alternatively, use diskStorage if you want to save files to disk
-// Check if the folder exists, and create it if it doesn'
+// Define the uploads folder path
+const uploadsFolder = path.join(process.cwd(), "uploads"); 
 
-if (!fs.existsSync("../uploads")) {
-  fs.mkdirSync("../uploads", { recursive: true });
-}
+// Function to create the directory if it doesn't exist
+const createUploadsFolder = (folderPath) => {
+  try {
+    if (!fs.existsSync(folderPath)) {
+      fs.mkdirSync(folderPath, { recursive: true }); // Create the folder
+      console.log(`Uploads folder created at: ${folderPath}`);
+    } else {
+      console.log(`Uploads folder already exists at: ${folderPath}`);
+    }
+  } catch (error) {
+    console.error(`Error creating uploads folder: ${error.message}`);
+  }
+};
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Ensure the uploads folder exists before multer is used
+createUploadsFolder(uploadsFolder);
 
-const dest = path.join(__dirname, "..", "uploads");
+// Define the storage engine for multer
 let storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, dest); // Directory where files will be saved
+    // Double-check folder existence just in case
+    createUploadsFolder(uploadsFolder);
+    cb(null, uploadsFolder); // Save files in the uploads folder
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname)); // Filename
+    cb(null, Date.now() + path.extname(file.originalname)); // Set filename with timestamp
   },
 });
 
