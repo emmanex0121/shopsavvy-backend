@@ -56,7 +56,7 @@ const registration = async (req, res) => {
     await user.save();
 
     res.status(201).json({
-      response: apiResponseCode.SUCESSFUL,
+      response: apiResponseCode.SUCCESSFUL,
       responseMessage: `${email} registered succefully`,
       data: {
         firstName,
